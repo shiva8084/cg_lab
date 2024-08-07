@@ -1,0 +1,86 @@
+#include <windows.h>
+#include <stdio.h>
+#include <math.h>
+#include <gl/glut.h>
+
+GLint ch;
+GLfloat px, py, angle, sx, sy;
+
+void drawTri()
+{
+    glBegin(GL_LINE_LOOP);
+    glColor3f(1.0, 0.0, 0.0);
+    glVertex2f(350.0, 400.0);
+    glColor3f(0.0, 1.0, .0);
+    glVertex2f(500.0, 400.0);
+    glColor3f(0.0, 0.0, 1.0);
+    glVertex2f(425.0, 500.0);
+    glEnd();
+    glFlush();
+}
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    switch (ch)
+    {
+    case 1:
+        drawTri();
+        glRotatef(angle, 0, 0, 1);
+        drawTri();
+        glFlush();
+    case 2:
+        drawTri();
+        glTranslatef(px, py, 0);
+        glRotatef(angle, 0, 0, 1);
+        glTranslatef(-px, -py, 0);
+        drawTri();
+        glFlush();
+    case 3:
+        drawTri();
+        glScalef(sx, sy, 0.0);
+        drawTri();
+        glFlush();
+    case 4:
+        drawTri();
+        glTranslatef(px, py, 0);
+        glScalef(sx, sy, 0.0);
+        glTranslatef(-px, -py, 0);
+        drawTri();
+        glFlush();
+    }
+}
+void myinit()
+{
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 1000, 0, 1000);
+}
+int main(int argc, char **argv)
+{
+    printf("Transformation on 2D Object \n1.Rotation about Origin \n2.Rotation about Pivot Point \n3.Scaling about Origin \n4.Scaling about Pivot Point\n");
+    printf("Enter choice\n");
+    scanf("%d", &ch);
+    if (ch == 2 || ch == 4)
+    {
+        printf("Enter the pivot point");
+        scanf("%f %f", &px, &py);
+    }
+    if (ch == 1 || ch == 2)
+    {
+        printf("\n Enter the angle of Rotation:\t");
+        scanf("%f", &angle);
+    }
+    if (ch == 3 || ch == 4)
+    {
+        printf("\n Enter the scaling factors\t");
+        scanf("%f %f", &sx, &sy);
+    }
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(1000, 1000);
+    glutCreateWindow("Geometric Transformation on 2D Objects");
+    glutDisplayFunc(display);
+    myinit();
+    glutMainLoop();
+}
